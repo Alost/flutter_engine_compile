@@ -8,6 +8,8 @@ on:
         description: run with tmate and vscode
         required: false
         default: false
+  repository_dispatch:
+    types: [build_flutter_engine]
 
 jobs:
   build_arm:
