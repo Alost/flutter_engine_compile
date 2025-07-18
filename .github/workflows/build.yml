@@ -32,7 +32,7 @@ jobs:
           lfs: true
           repository: Alost/flutter_engine
           ref: master
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
 
       - name: Setup Python
         uses: actions/setup-python@v5
