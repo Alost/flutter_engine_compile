@@ -42,7 +42,7 @@ jobs:
         with:
           lfs: true
           repository: Alost/flutter_engine
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
 
       - name: Setup Java
         uses: actions/setup-java@v4
