@@ -31,7 +31,7 @@ jobs:
         with:
           repository: Alost/flutter_engine
           ref: master
-          token: ${{ env.PAT }}
+          token: ${{ secrets.PAT }}
           lfs: true
 
       - name: Setup Python
