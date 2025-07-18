@@ -21,7 +21,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      actions: read
+      actions: write
       contents: write
     env:
       ACTIONS_RUNNER_DEBUG: true
@@ -31,7 +31,7 @@ jobs:
         with:
           lfs: true
           repository: Alost/flutter_engine
-          branch: master
+          ref: master
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Python
