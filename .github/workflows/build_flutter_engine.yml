@@ -18,6 +18,7 @@ jobs:
       build_script: build_arm.sh
       artifact_name: ARM
       debug: ${{ github.event_name == 'workflow_dispatch' && inputs.debug }}
+    secrets: inherit
 
   build_arm64:
     uses: ./.github/workflows/build.yml
@@ -25,6 +26,7 @@ jobs:
       build_script: build_arm64.sh
       artifact_name: ARM64
       debug: ${{ github.event_name == 'workflow_dispatch' && inputs.debug }}
+    secrets: inherit
 
   build_x64:
     uses: ./.github/workflows/build.yml
@@ -32,6 +34,7 @@ jobs:
       build_script: build_x64.sh
       artifact_name: X64
       debug: ${{ github.event_name == 'workflow_dispatch' && inputs.debug }}
+    secrets: inherit
 
   collect_and_release:
     runs-on: ubuntu-latest
@@ -60,7 +63,6 @@ jobs:
         with:
           name: ARM
           path: ./flutter/engine/src/lib
-        secrets: inherit
 
       - name: Collect ARM64 Artifacts
         continue-on-error: true
@@ -68,7 +70,6 @@ jobs:
         with:
           name: ARM64
           path: ./flutter/engine/src/lib
-        secrets: inherit
 
       - name: Collect X64 Artifacts
         continue-on-error: true
@@ -76,7 +77,6 @@ jobs:
         with:
           name: X64
           path: ./flutter/engine/src/lib
-        secrets: inherit
 
       - name: Collect Artifacts
         run: |
