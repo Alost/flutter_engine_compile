@@ -22,17 +22,17 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       actions: write
-      contents: write
+      contents: read
     env:
       ACTIONS_RUNNER_DEBUG: true
       ACTIONS_STEP_DEBUG: true
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT }}
-          lfs: true
           repository: Alost/flutter_engine
           ref: master
+          token: ${{ secrets.PAT }}
+          lfs: true
 
       - name: Setup Python
         uses: actions/setup-python@v5
