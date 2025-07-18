@@ -1,0 +1,100 @@
+name: Build Flutter Engine
+on: 
+  push:
+  workflow_dispatch:
+    inputs:
+      debug:
+        type: boolean
+        description: run with tmate and vscode
+        required: false
+        default: false
+
+jobs:
+  build_arm:
+    uses: ./.github/workflows/build.yml
+    with:
+      build_script: build_arm.sh
+      artifact_name: ARM
+      debug: ${{ github.event_name == 'workflow_dispatch' && inputs.debug }}
+
+  build_arm64:
+    uses: ./.github/workflows/build.yml
+    with:
+      build_script: build_arm64.sh
+      artifact_name: ARM64
+      debug: ${{ github.event_name == 'workflow_dispatch' && inputs.debug }}
+
+  build_x64:
+    uses: ./.github/workflows/build.yml
+    with:
+      build_script: build_x64.sh
+      artifact_name: X64
+      debug: ${{ github.event_name == 'workflow_dispatch' && inputs.debug }}
+
+  collect_and_release:
+    runs-on: ubuntu-latest
+    # needs: [build_arm]
+    needs: [build_arm, build_arm64, build_x64]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          repository: Alost/flutter_engine
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Collect ARM Artifacts
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: ARM
+          path: ./flutter/engine/src/lib
+
+      - name: Collect ARM64 Artifacts
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: ARM64
+          path: ./flutter/engine/src/lib
+
+      - name: Collect X64 Artifacts
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: X64
+          path: ./flutter/engine/src/lib
+
+      - name: Collect Artifacts
+        run: |
+          chmod +x ./scripts/*.sh
+          ./scripts/collect_artifacts.sh
+
+      - name: Repack Apk
+        run: |
+          chmod +x ./scripts/*.sh
+          ./scripts/repack_apk.sh
+
+      - name: Upload Apk
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: repack/jyhf.apk
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        # Settings -> Actions -> General -> Workflow permissions -> Read and write permissions
+        with:
+          tag_name: ${{ env.VERSION }}
+          name: ${{ github.event.head_commit.message }}-${{ env.VERSION }}
+          body: |
+            ${{ github.event.head_commit.message }}
+          files: |
+            flutter/engine/src/lib.tar.gz
+            repack/jyhf.apk
+          draft: false
+          prerelease: false

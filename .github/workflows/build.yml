@@ -1,0 +1,85 @@
+name: Build
+on:
+  workflow_call:
+    inputs:
+      build_script:
+        description: 'build script'
+        required: true
+        type: string
+        default: 'build_arm.sh'
+      artifact_name:
+        description: 'artifact name'
+        required: true
+        type: string
+        default: 'ARM'
+      debug:
+        description: 'run with tmate and vscode'
+        required: false
+        type: boolean
+        default: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: write
+    env:
+      ACTIONS_RUNNER_DEBUG: true
+      ACTIONS_STEP_DEBUG: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          repository: Alost/flutter_engine
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      # - uses: mxschmitt/action-tmate@v3
+      #   with:
+      #     detached: true
+      #     timeout-minutes: 5
+      # - uses: fawazahmed0/action-debug-vscode@main # touch continue
+
+      - uses: ./.github/actions/free_disk_space
+
+      - name: Prepare Environment
+        run: |
+          chmod +x ./scripts/*.sh
+          ./scripts/prepare_environment.sh
+
+      - name: Set Environment Variables
+        run: |
+          source ./scripts/set_env.sh
+
+      - name: Download Source
+        run: ./scripts/download_source.sh
+
+      - name: Modify Source
+        run: ./scripts/modify_source.sh
+
+      - uses: mxschmitt/action-tmate@v3
+        if: ${{ inputs.debug }}
+        with:
+          detached: true
+          timeout-minutes: 5
+      - uses: fawazahmed0/action-debug-vscode@main # touch continue
+        if: ${{ inputs.debug }}
+
+      - name: Build
+        run: ./scripts/${{ inputs.build_script }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ./flutter/engine/src/lib
+
+      - uses: mxschmitt/action-tmate@v3
+        if: ${{ failure() }}
+        timeout-minutes: 2
+      - uses: fawazahmed0/action-debug-vscode@main # touch continue
+        if: ${{ failure() }}
