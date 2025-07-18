@@ -27,9 +27,6 @@ jobs:
       ACTIONS_RUNNER_DEBUG: true
       ACTIONS_STEP_DEBUG: true
     steps:
-      - run: |
-          echo ${{ secrets.PAT }}
-
       - uses: actions/checkout@v4
         with:
           repository: Alost/flutter_engine
