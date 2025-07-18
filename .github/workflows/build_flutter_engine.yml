@@ -43,10 +43,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          lfs: true
           repository: Alost/flutter_engine
           ref: master
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
+          lfs: true
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -60,6 +60,7 @@ jobs:
         with:
           name: ARM
           path: ./flutter/engine/src/lib
+        secrets: inherit
 
       - name: Collect ARM64 Artifacts
         continue-on-error: true
@@ -67,6 +68,7 @@ jobs:
         with:
           name: ARM64
           path: ./flutter/engine/src/lib
+        secrets: inherit
 
       - name: Collect X64 Artifacts
         continue-on-error: true
@@ -74,6 +76,7 @@ jobs:
         with:
           name: X64
           path: ./flutter/engine/src/lib
+        secrets: inherit
 
       - name: Collect Artifacts
         run: |

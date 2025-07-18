@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       actions: write
-      contents: read
+      contents: write
     env:
       ACTIONS_RUNNER_DEBUG: true
       ACTIONS_STEP_DEBUG: true
