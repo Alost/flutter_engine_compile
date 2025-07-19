@@ -75,6 +75,8 @@ docker run -d --name flutter \
 
 都不行
 
+容器内优化不了磁盘空间
+
 # 阶段1：下载和同步
 FROM ubuntu:22.04 as downloader
 RUN apt-get update && apt-get install -y git python3 curl
