@@ -29,12 +29,8 @@ jobs:
     env:
       ACTIONS_RUNNER_DEBUG: true
       ACTIONS_STEP_DEBUG: true
-    # container:
-    #   image: ghcr.io/alost/flutter-engine-compile:latest
+    container: ${{ inputs.use_container && 'ghcr.io/alost/flutter-engine-compile:latest' || '' }}
     steps:
-      - uses: docker://ghcr.io/alost/flutter-engine-compile:latest
-        if: ${{ inputs.use_container }}
-
       - uses: actions/checkout@v4
         with:
           repository: Alost/flutter_engine
