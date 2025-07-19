@@ -1,6 +1,6 @@
 name: Build Ghcr Image Copy
 on: 
-  push:
+  # push:
   workflow_dispatch:
     inputs:
       debug:
