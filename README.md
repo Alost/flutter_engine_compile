@@ -38,6 +38,8 @@ docker system prune -a --volumes
 du -sh .
 du -h --max-depth=5 engine | sort -h
 
+非自定义runner不能用自定义镜像.....
+
 # 阶段1：下载和同步
 FROM ubuntu:22.04 as downloader
 RUN apt-get update && apt-get install -y git python3 curl
