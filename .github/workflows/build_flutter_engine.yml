@@ -1,6 +1,6 @@
 name: Build Flutter Engine
 on: 
-  push:
+  # push:
   workflow_dispatch:
     inputs:
       debug:
@@ -37,7 +37,7 @@ jobs:
     secrets: inherit
 
   collect_and_release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     # needs: [build_arm]
     needs: [build_arm, build_arm64, build_x64]
     permissions: write-all

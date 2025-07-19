@@ -1,0 +1,37 @@
+name: Build Ghcr Image
+on: 
+  push:
+  workflow_dispatch:
+    inputs:
+      debug:
+        type: boolean
+        description: run with tmate and vscode
+        required: false
+        default: false
+jobs:
+  build_image:
+    runs-on: ubuntu-22.04
+    permissions: write-all
+    env:
+      ACTIONS_RUNNER_DEBUG: true
+      ACTIONS_STEP_DEBUG: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: Alost/flutter_engine
+          ref: master
+          token: ${{ secrets.PAT }}
+          lfs: true
+
+      - uses: ./.github/actions/free_disk_space
+
+      - name: Prepare Environment
+        run: |
+          chmod +x ./scripts/*.sh
+          ./scripts/prepare_environment.sh
+
+      - uses: mxschmitt/action-tmate@v3
+        with:
+          detached: true
+          timeout-minutes: 5
+      - uses: fawazahmed0/action-debug-vscode@main # touch continue
