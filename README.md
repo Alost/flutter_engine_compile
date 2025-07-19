@@ -33,12 +33,26 @@ find . -type d -name ".git" -exec rm -rf {} +
 DOCKER_BUILDKIT=0 docker build --build-arg FLUTTER_VERSION=3.22.3 -t ghcr.io/alost/flutter-engine-compile:latest -f Copy_Dockerfile .
 docker push ghcr.io/alost/flutter-engine-compile:latest
 
+docker run -it --rm ghcr.io/alost/flutter-engine-compile:latest
+
 docker system prune -a --volumes
 
 du -sh .
 du -h --max-depth=5 engine | sort -h
 
 非自定义runner不能用自定义镜像.....
+直接docker run, 挂载docker目录呢
+
+/home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter
+
+docker run --rm \
+    -v "/home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter:/home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter" \
+    ghcr.io/alost/flutter-engine-compile:latest
+
+    runs-on: ubuntu-22.04
+    container:
+      image: ghcr.io/alost/flutter-engine-compile:latest
+      options: --volume /home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter:/home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter
 
 # 阶段1：下载和同步
 FROM ubuntu:22.04 as downloader
