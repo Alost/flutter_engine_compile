@@ -42,7 +42,9 @@ jobs:
           fetch-depth: 1
           path: tmp
       - run: |
-          mv tmp/. ./
+          shopt -s dotglob
+          mv tmp/* ./
+          shopt -u dotglob
           rm -rf tmp
 
       - name: Setup Python
