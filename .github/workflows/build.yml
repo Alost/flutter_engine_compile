@@ -24,8 +24,8 @@ jobs:
     env:
       ACTIONS_RUNNER_DEBUG: true
       ACTIONS_STEP_DEBUG: true
-    # container:
-    #   image: ghcr.io/alost/flutter-engine-compile:latest
+    container:
+      image: ghcr.io/alost/flutter-engine-compile:latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,10 +34,10 @@ jobs:
           token: ${{ secrets.PAT }}
           lfs: true
           fetch-depth: 1
-      #     path: tmp
-      # - run: |
-      #     mv tmp/* ./
-      #     rm -rf tmp
+          path: tmp
+      - run: |
+          mv tmp/* ./
+          rm -rf tmp
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -61,8 +61,8 @@ jobs:
         run: |
           source ./scripts/set_env.sh
 
-      - name: Download Source
-        run: ./scripts/download_source.sh
+      # - name: Download Source
+      #   run: ./scripts/download_source.sh
 
       - name: Modify Source
         run: ./scripts/modify_source.sh
