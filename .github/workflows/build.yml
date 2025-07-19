@@ -19,8 +19,8 @@ on:
         default: false
 jobs:
   build:
-    # runs-on: ubuntu-22.04
-    runs-on: ghcr.io/alost/flutter-engine-compile:latest
+    runs-on: ubuntu-22.04
+    # runs-on: ghcr.io/alost/flutter-engine-compile:latest
     permissions: write-all
     env:
       ACTIONS_RUNNER_DEBUG: true
