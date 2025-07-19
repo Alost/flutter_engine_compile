@@ -42,10 +42,12 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event.inputs.debug }}
         with:
           detached: true
           timeout-minutes: 5
       - uses: fawazahmed0/action-debug-vscode@main # touch continue
+        if: ${{ github.event.inputs.debug }}
 
       - name: Build Image
         run: |
