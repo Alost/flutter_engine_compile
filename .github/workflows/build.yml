@@ -26,7 +26,6 @@ jobs:
       ACTIONS_STEP_DEBUG: true
     container:
       image: ghcr.io/alost/flutter-engine-compile:latest
-      options: --volume /home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter:/home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter
     steps:
       - uses: actions/checkout@v4
         with:

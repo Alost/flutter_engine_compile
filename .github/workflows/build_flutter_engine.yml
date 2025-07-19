@@ -1,6 +1,6 @@
 name: Build Flutter Engine
 on: 
-  push:
+  # push:
   workflow_dispatch:
     inputs:
       debug:

@@ -3,6 +3,21 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive \
     ROOT_DIR=/home/runner/work/flutter_engine_compile/flutter_engine_compile
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    sudo \    
+    ca-certificates \
+    git \
+    python3 \
+    python-is-python3 \
+    curl \
+    unzip \
+    clang \
+    cmake \
+    ninja-build \
+    pkg-config \
+    openjdk-21-jdk \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR ${ROOT_DIR}
 
 COPY ./flutter ${ROOT_DIR}/flutter

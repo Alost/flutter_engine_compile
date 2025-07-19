@@ -45,14 +45,35 @@ du -h --max-depth=5 engine | sort -h
 
 /home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter
 
-docker run --rm \
-    -v "/home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter:/home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter" \
-    ghcr.io/alost/flutter-engine-compile:latest
-
+job跑在container上:
     runs-on: ubuntu-22.04
     container:
       image: ghcr.io/alost/flutter-engine-compile:latest
-      options: --volume /home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter:/home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter
+
+
+docker run -d --name flutter \
+    ghcr.io/alost/flutter-engine-compile:latest
+
+docker ps -a
+docker stop flutter
+docker rm -f flutter
+docker logs -f flutter 
+docker exec -it flutter bash
+docker inspect flutter
+
+docker cp flutter:/home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter /home/runner/work/flutter_engine_compile/flutter_engine_compile/
+
+docker run -v /host/tmpfs:/flutter --tmpfs /host/tmpfs your_image
+
+docker create --name temp_flutter \
+  -v /home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter \
+  ghcr.io/alost/flutter-engine-compile:latest
+docker run -d --name flutter \
+  --volumes-from temp_flutter \
+  -v /home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter:/home/runner/work/flutter_engine_compile/flutter_engine_compile/flutter \
+  ghcr.io/alost/flutter-engine-compile:latest
+
+都不行
 
 # 阶段1：下载和同步
 FROM ubuntu:22.04 as downloader
