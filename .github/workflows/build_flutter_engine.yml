@@ -48,6 +48,11 @@ jobs:
           ref: master
           token: ${{ secrets.PAT }}
           lfs: true
+          fetch-depth: 1
+          path: tmp
+      - run: |
+          mv tmp/* ./
+          rm -rf tmp
 
       - name: Setup Java
         uses: actions/setup-java@v4
