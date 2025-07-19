@@ -1,6 +1,6 @@
 name: Build Ghcr Image
 on: 
-  # push:
+  push:
   workflow_dispatch:
     inputs:
       debug:
@@ -20,18 +20,25 @@ jobs:
         with:
           lfs: true
 
-      - uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - uses: ./.github/actions/free_disk_space
 
       - name: Prepare Environment
         run: |
           chmod +x ./scripts/*.sh
           ./scripts/prepare_environment.sh
+
+      - name: Set Environment Variables
+        run: |
+          source ./scripts/set_env.sh
+
+      - name: Download Source
+        run: ./scripts/download_source.sh
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: mxschmitt/action-tmate@v3
         with:
@@ -41,11 +48,12 @@ jobs:
 
       - name: Build Image
         run: |
-          docker build --build-arg FLUTTER_VERSION=3.22.3 -t ghcr.io/alost/flutter-engine-compile:3.22.3 .
+          find . -type d -name ".git" -exec rm -rf {} +
+          docker build --build-arg FLUTTER_VERSION=${{ env.VERSION }} -t ghcr.io/alost/flutter-engine-compile:latest -f Copy_Dockerfile .
 
       - name: Push Image
         run: |
-          docker push ghcr.io/alost/flutter-engine-compile:3.22.3
+          docker push ghcr.io/alost/flutter-engine-compile:latest
 
       - uses: mxschmitt/action-tmate@v3
         if: ${{ failure() }}

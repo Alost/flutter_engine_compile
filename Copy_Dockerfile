@@ -1,0 +1,10 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    ROOT_DIR=/home/runner/work/flutter_engine_compile/flutter_engine_compile
+
+WORKDIR ${ROOT_DIR}
+
+COPY ./flutter ${ROOT_DIR}/flutter
+
+CMD ["bash"]
