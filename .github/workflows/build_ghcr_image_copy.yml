@@ -1,4 +1,4 @@
-name: Build Ghcr Image
+name: Build Ghcr Image Copy
 on: 
   push:
   workflow_dispatch:
