@@ -48,6 +48,7 @@ jobs:
 
       - name: Build Image
         run: |
+          rm -rf flutter/engine/src/fuchsia
           find . -type d -name ".git" -exec rm -rf {} +
           docker build --build-arg FLUTTER_VERSION=${{ env.VERSION }} -t ghcr.io/alost/flutter-engine-compile:latest -f Copy_Dockerfile .
 

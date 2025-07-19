@@ -19,7 +19,8 @@ on:
         default: false
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    # runs-on: ubuntu-22.04
+    runs-on: ghcr.io/alost/flutter-engine-compile:latest
     permissions: write-all
     env:
       ACTIONS_RUNNER_DEBUG: true
@@ -31,6 +32,10 @@ jobs:
           ref: master
           token: ${{ secrets.PAT }}
           lfs: true
+          path: tmp
+      - run: |
+          mv tmp/* ./
+          rm -rf tmp
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -54,8 +59,8 @@ jobs:
         run: |
           source ./scripts/set_env.sh
 
-      - name: Download Source
-        run: ./scripts/download_source.sh
+      # - name: Download Source
+      #   run: ./scripts/download_source.sh
 
       - name: Modify Source
         run: ./scripts/modify_source.sh

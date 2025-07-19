@@ -27,10 +27,16 @@ echo xx | docker login ghcr.io -u Alost --password-stdin
 
 DOCKER_BUILDKIT=0 docker build xxx
 
+rm -rf flutter/engine/src/fuchsia
+
 find . -type d -name ".git" -exec rm -rf {} +
-docker build --build-arg FLUTTER_VERSION=3.22.3 -t ghcr.io/alost/flutter-engine-compile:latest -f Copy_Dockerfile .
+DOCKER_BUILDKIT=0 docker build --build-arg FLUTTER_VERSION=3.22.3 -t ghcr.io/alost/flutter-engine-compile:latest -f Copy_Dockerfile .
 docker push ghcr.io/alost/flutter-engine-compile:latest
 
+docker system prune -a --volumes
+
+du -sh .
+du -h --max-depth=5 engine | sort -h
 
 # 阶段1：下载和同步
 FROM ubuntu:22.04 as downloader
