@@ -8,6 +8,11 @@ on:
         description: run with tmate and vscode
         required: false
         default: false
+      use_container:
+        type: boolean
+        description: run with container
+        required: false
+        default: false
   repository_dispatch:
     types: [build_flutter_engine]
 
@@ -17,7 +22,8 @@ jobs:
     with:
       build_script: build_arm.sh
       artifact_name: ARM
-      debug: ${{ github.event_name == 'workflow_dispatch' && inputs.debug }}
+      debug: ${{ inputs.debug || false }}
+      use_container: ${{ inputs.use_container || false }}
     secrets: inherit
 
   build_arm64:
@@ -25,7 +31,8 @@ jobs:
     with:
       build_script: build_arm64.sh
       artifact_name: ARM64
-      debug: ${{ github.event_name == 'workflow_dispatch' && inputs.debug }}
+      debug: ${{ inputs.debug || false }}
+      use_container: ${{ inputs.use_container || false }}
     secrets: inherit
 
   build_x64:
@@ -33,7 +40,8 @@ jobs:
     with:
       build_script: build_x64.sh
       artifact_name: X64
-      debug: ${{ github.event_name == 'workflow_dispatch' && inputs.debug }}
+      debug: ${{ inputs.debug || false }}
+      use_container: ${{ inputs.use_container || false }}
     secrets: inherit
 
   collect_and_release:
