@@ -42,6 +42,8 @@ jobs:
       artifact_name: X64
       debug: ${{ inputs.debug || false }}
       use_container: ${{ inputs.use_container || false }}
+      # ref: ${{ github.event.client_payload.ref }}
+      sha: ${{ github.event.client_payload.sha }}
     secrets: inherit
 
   collect_and_release:
@@ -53,7 +55,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Alost/flutter_engine
-          ref: master
+          # ref: master
+          ref: ${{ github.event.client_payload.sha }} # 锁定代码
           token: ${{ secrets.PAT }}
           lfs: true
           fetch-depth: 1
